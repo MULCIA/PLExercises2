@@ -1,11 +1,11 @@
 /*
 
-?- espejo_arbol(6,[[[[[],1,[]],5,[]],7,[[],3,[[],4,[]]]],6,[[[],10,[]],8,[[[],9,[]],11,[[],2,[]]]]],L).
+?- espejo_arbol(6,[[[[[],1,[]],5,[]],7,[[],3,[[],4,[]]]],6,[[[],10,[]],8,[[[],9,[]],11,[[],2,[]]]]],HS,L).
 L = [6, 8, 10, 11, 9, 2, 7, 5, 1|...].
 
 */
 
-espejo_arbol(N,ABN,L):- explora_hijos(N,ABN,HS), construye_lista(HS,L).
+espejo_arbol(N,ABN,HS,L):- explora_hijos(N,ABN,HS), construye_lista(HS,L).
 
 explora_hijos(R,[],[]).
 explora_hijos(R,[HI,R,HD],[HD,R,HI]).
