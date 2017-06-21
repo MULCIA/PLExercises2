@@ -1,21 +1,27 @@
 /*
 
-?- espejo_arbol(6,[[[[[],1,[]],5,[]],7,[[],3,[[],4,[]]]],6,[[[],10,[]],8,[[[],9,[]],11,[[],2,[]]]]],HS,L).
-HS = [[[[], 10, []], 8, [[[], 9, []], 11, [[], 2|...]]], 6, [[[[], 1, []], 5, []], 7, [[], 3, [...|...]]]],
-L = [6, 8, 10, 11, 9, 2, 7, 5, 1|...].
+?-  espejo_arbol([[[[[],1,[]],5,[]],7,[[],3,[[],4,[]]]],6,[[[],10,[]],8,[[[],9,[]],11,[[],2,[]]]]],NS).
+NS = [6, 8, 7, 11, 10, 3, 5, 2, 9|...] .
 
 */
 
-espejo_arbol(N,ABN,HS,L):- explora_hijos(N,ABN,HS), construye_lista(HS,L).
+% Recibe un ABN y una lista de Nodos ordenados vacia. Consigue la lista de nodos por busqueda en profundidad junto a sus niveles, para ser ordenados despues.
+espejo_arbol(ABN,NS) :- explora_hijos(ABN,N,L,0), insert_sort(L,N,LS,NS). %insert_sort(L,N,NS).
 
-explora_hijos(R,[],[]).
-explora_hijos(R,[HI,R,HD],[HD,R,HI]).
-explora_hijos(R,[HI,_,HD],HS) :-
-    explora_hijos(R,HD,HS),
-    explora_hijos(R,HI,HS).
+explora_hijos([],[],_,_).
+explora_hijos([[],R,[]],[R|Rs],[N|Ps],N).
+explora_hijos([HI,R,HD],[R|Rs],[N|Ps],N) :-
+    N2 is N + 1,
+    explora_hijos(HI,HIs,PIs,N2),
+    explora_hijos(HD,HDs,PDs,N2),
+    append(HIs,HDs,Rs),
+    append(PIs,PDs,Ps).
 
-construye_lista([],[]).
-construye_lista([HI,R,HD],[R|Rs]) :-
-    construye_lista(HI,HIs),
-    construye_lista(HD,HDs),
-    append(HIs,HDs,Rs).
+insert_sort(List,List2,Sorted,Sorted2):-i_sort(List,List2,[],[],Sorted,Sorted2).
+
+i_sort([],[],Acc,AccO,Acc,AccO).
+i_sort([H|T],[HO|TO],Acc,AccO,Sorted,SortedO):-insert(H,HO,Acc,AccO,NAcc,NAccO),i_sort(T,TO,NAcc,NAccO,Sorted,SortedO).
+
+insert(X,XO,[Y|T],[YO|TO],[Y|NT],[YO|NTO]):-X>Y,insert(X,XO,T,TO,NT,NTO).
+insert(X,XO,[Y|T],[YO|TO],[X,Y|T],[XO,YO|TO]):-X=<Y.
+insert(X,XO,[],[],[X],[XO]).
