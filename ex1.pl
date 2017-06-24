@@ -14,8 +14,8 @@ explora_hijos([HI,R,HD],[R|Rs],[N|Ps],N) :-
     N2 is N + 1,
     explora_hijos(HI,HIs,PIs,N2),
     explora_hijos(HD,HDs,PDs,N2),
-    append(HIs,HDs,Rs),
-    append(PIs,PDs,Ps).
+    append(HDs,HIs,Rs),
+    append(PDs,PIs,Ps).
 
 insert_sort(List,List2,Sorted,Sorted2):-i_sort(List,List2,[],[],Sorted,Sorted2).
 
