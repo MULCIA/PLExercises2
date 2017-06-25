@@ -6,7 +6,7 @@ NS = [6, 8, 7, 11, 10, 3, 5, 2, 9|...] .
 */
 
 % Recibe un ABN y una lista de Nodos ordenados vacia. Consigue la lista de nodos por busqueda en profundidad junto a sus niveles, para ser ordenados despues.
-escribe_arbol(ABN,NS) :- explora_hijos(ABN,N,L,0), insert_sort(L,N,LS,NS). %insert_sort(L,N,NS).
+escribe_arbol(ABN,NS) :- explora_hijos(ABN,N,L,0), ordena_por_niveles(L,N,LS,NS), dibuja_arbol(LS,NS,0).
 
 explora_hijos([],[],_,_).
 explora_hijos([[],R,[]],[R|Rs],[N|Ps],N).
@@ -17,7 +17,7 @@ explora_hijos([HI,R,HD],[R|Rs],[N|Ps],N) :-
     append(HDs,HIs,Rs),
     append(PDs,PIs,Ps).
 
-insert_sort(List,List2,Sorted,Sorted2):-i_sort(List,List2,[],[],Sorted,Sorted2).
+ordena_por_niveles(List,List2,Sorted,Sorted2):-i_sort(List,List2,[],[],Sorted,Sorted2).
 
 i_sort([],[],Acc,AccO,Acc,AccO).
 i_sort([H|T],[HO|TO],Acc,AccO,Sorted,SortedO):-insert(H,HO,Acc,AccO,NAcc,NAccO),i_sort(T,TO,NAcc,NAccO,Sorted,SortedO).
@@ -25,3 +25,9 @@ i_sort([H|T],[HO|TO],Acc,AccO,Sorted,SortedO):-insert(H,HO,Acc,AccO,NAcc,NAccO),
 insert(X,XO,[Y|T],[YO|TO],[Y|NT],[YO|NTO]):-X>Y,insert(X,XO,T,TO,NT,NTO).
 insert(X,XO,[Y|T],[YO|TO],[X,Y|T],[XO,YO|TO]):-X=<Y.
 insert(X,XO,[],[],[X],[XO]).
+
+dibuja_arbol([],[],_).
+dibuja_arbol([L|Ls],[N|Ns],Actual) :- Actual == L, format("~d    ",[N]), dibuja_arbol(Ls,Ns,L).
+dibuja_arbol([L|Ls],[N|Ns],Actual) :- Actual < L, format("~n",[]), format("~d    ",[N]), dibuja_arbol(Ls,Ns,L).
+
+%?- dibuja_arbol([0,1,1,2,2,2,2,3,3],[6, 8, 7, 11, 10, 3, 5, 2, 9, 4],0).
